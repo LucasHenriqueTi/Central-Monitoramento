@@ -1,15 +1,6 @@
-services:
+version: '3.8'
 
-  # configuração do grafana
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    ports:
-      - "3000:3000" 
-    depends_on:
-      - prometheus 
-    volumes:
-      - grafana-data:/var/lib/grafana
+services:
 
   # configuração do prometheus
   prometheus:
@@ -19,9 +10,43 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    command: 
+    command:
       - '--config.file=/etc/prometheus/prometheus.yml'
 
-#volumes
+  # configuração do loki
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100" 
+    volumes:
+      - loki-data:/loki
+
+  # configuração do promtail
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    volumes:
+      - ./promtail/promtail-config.yml:/etc/promtail/config.yml
+      # Monta o "socket" do Docker para que o Promtail possa ler os logs
+      - /var/run/docker.sock:/var/run/docker.sock
+    command:
+      - '-config.file=/etc/promtail/config.yml'
+    depends_on:
+      - loki 
+
+  # configuração do grafana
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+    volumes:
+      - grafana-data:/var/lib/grafana
+
 volumes:
   grafana-data:
+  loki-data: 
