@@ -1,18 +1,19 @@
+
 server:
   http_listen_port: 3200
 
+# Configuração de quem pode enviar dados
 distributor:
   receivers:
-    otlp:
+    otlp: 
       protocols:
         grpc:
         http:
 
+# Configuração do armazenamento
 storage:
   trace:
     backend: local
-    local: /tmp/tempo/traces
+    local:
+      path: /tmp/tempo/traces
 
-ingester:
-  max_block_duration: 5m
-  max_traces_per_block: 100

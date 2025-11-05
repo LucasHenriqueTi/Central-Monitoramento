@@ -39,14 +39,16 @@ services:
   tempo:
     image: grafana/tempo:latest
     container_name: tempo
-    command: [-config.file=/etc/tempo/tempo-config.yml]
+    # A linha de comando aponta para /etc/tempo.yml
+    command: [-config.file=/etc/tempo.yml]
     volumes:
+      # O volume DEVE mapear para o mesmo arquivo: /etc/tempo.yml
       - ./tempo/tempo-config.yml:/etc/tempo.yml
-      - tempo-data:/tmp/tempo/trace
+      - tempo-data:/tmp/tempo/traces
     ports:
-      - "3200:3200" # Porta principal do Tempo (para Grafana)
-      - "4317:4317" # OTLP gRPC (para o Collector)
-      - "4318:4318" # OTLP HTTP (para o Collector)
+      - "3200:3200"
+      - "4317:4317"
+      - "4318:4318"
     
   # configuração do otel-collector 
   otel-collector:
