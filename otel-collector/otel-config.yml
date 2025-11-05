@@ -1,0 +1,45 @@
+receivers:
+  otlp: 
+    protocols:
+      grpc: 
+      http:
+
+processors:
+  batch: 
+    
+exporters:
+  loki:
+    endpoint: "http://loki:3100/loki/api/v1/push"
+    
+  otlp/tempo:
+    endpoint: "http://tempo:4317"
+    tls:
+      insecure: true 
+
+  prometheus:
+    endpoint: "prometheus:9090"
+    
+  prometheusremotewrite:
+    endpoint: "http://prometheus:9090/api/v1/write"
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    # Pipeline de TRACES: Recebe OTLP -> Processa em Lote -> Envia para o Tempo
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp/tempo]
+
+    # Pipeline de MÉTRICAS: Recebe OTLP -> Processa em Lote -> Envia para o Prometheus
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [prometheusremotewrite]
+
+    # Pipeline de LOGS: Recebe OTLP -> Processa em Lote -> Envia para o Loki
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [loki]

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   # configuração do prometheus
@@ -10,8 +8,10 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus 
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-remote-write-receiver'
 
   # configuração do loki
   loki:
@@ -35,6 +35,34 @@ services:
     depends_on:
       - loki 
 
+  # configuração do tempo
+  tempo:
+    image: grafana/tempo:latest
+    container_name: tempo
+    command: [-config.file=/etc/tempo/tempo-config.yml]
+    volumes:
+      - ./tempo/tempo-config.yml:/etc/tempo.yml
+      - tempo-data:/tmp/tempo/trace
+    ports:
+      - "3200:3200" # Porta principal do Tempo (para Grafana)
+      - "4317:4317" # OTLP gRPC (para o Collector)
+      - "4318:4318" # OTLP HTTP (para o Collector)
+    
+  # configuração do otel-collector 
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel_collector
+    command: [--config=/etc/otel-config.yml]
+    volumes:
+      - ./otel-collector/otel-config.yml:/etc/otel-config.yml
+    ports:
+      - "14318:4318" # Recebe OTLP HTTP (mapeando para 14318 na máquina)
+      - "14317:4317" # Recebe OTLP gRPC (mapeando para 14317)
+    depends_on:
+      - loki
+      - prometheus
+      - tempo
+
   # configuração do grafana
   grafana:
     image: grafana/grafana:latest
@@ -44,9 +72,12 @@ services:
     depends_on:
       - prometheus
       - loki
+      - tempo
     volumes:
       - grafana-data:/var/lib/grafana
 
 volumes:
+  prometheus-data:
+  tempo-data:
   grafana-data:
   loki-data: 
