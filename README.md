@@ -20,7 +20,16 @@ Esta stack é composta por 6 serviços principais orquestrados via `docker-compo
 
 ## ⚙️ Estrutura de Arquivos
 
-minha-central-observabilidade/ ├── docker-compose.yml # Orquestrador principal dos serviços ├── prometheus/ │ └── prometheus.yml # Define o que o Prometheus deve "raspar" (scrape) ├── promtail/ │ └── promtail-config.yml # Configura o Promtail para descobrir logs do Docker ├── tempo/ │ └── tempo-config.yml # Configuração do armazém de traces └── otel-collector/ └── otel-config.yml # Configura as "esteiras" (pipelines) de telemetria
+Central-Monitoramento/
+├── docker-compose.yml          # Orquestrador principal dos serviços
+├── prometheus/
+│   └── prometheus.yml          # Define o que o Prometheus deve "raspar" (scrape)
+├── promtail/
+│   └── promtail-config.yml     # Configura o Promtail para descobrir logs do Docker
+├── tempo/
+│   └── tempo-config.yml        # Configuração do armazém de traces
+└── otel-collector/
+    └── otel-config.yml         # Configura as "esteiras" (pipelines) de telemetria
 
 
 ## ▶️ Como Executar
