@@ -1,4 +1,4 @@
-# 🚀 Central de Observabilidade (Stack OTel + LGTM)
+🚀 Central de Observabilidade (Stack OTel + LGTM)
 
 Este repositório contém uma stack de observabilidade completa e centralizada, pronta para monitorar múltiplas aplicações. A arquitetura é baseada no padrão OTel (OpenTelemetry) e na "LGTM Stack" (Loki, Grafana, Tempo, Mimir/Prometheus).
 
@@ -20,16 +20,8 @@ Esta stack é composta por 6 serviços principais orquestrados via `docker-compo
 
 ## ⚙️ Estrutura de Arquivos
 
-Central-Monitoramento/
-    └── docker-compose.yml # Orquestrador principal dos serviços
-    ├── prometheus/ 
-        └── prometheus.yml # Define o que o Prometheus deve "raspar" (scrape)
-    ├── promtail/ 
-        └── promtail-config.yml # Configura o Promtail para descobrir logs do Docker
-    ├── tempo/ 
-        └──tempo-config.yml # Configuração do armazém de traces
-    ├── otel-collector/ 
-        └── otel-config.yml # Configura as "esteiras" (pipelines) de telemetria
+minha-central-observabilidade/ ├── docker-compose.yml # Orquestrador principal dos serviços ├── prometheus/ │ └── prometheus.yml # Define o que o Prometheus deve "raspar" (scrape) ├── promtail/ │ └── promtail-config.yml # Configura o Promtail para descobrir logs do Docker ├── tempo/ │ └── tempo-config.yml # Configuração do armazém de traces └── otel-collector/ └── otel-config.yml # Configura as "esteiras" (pipelines) de telemetria
+
 
 ## ▶️ Como Executar
 
