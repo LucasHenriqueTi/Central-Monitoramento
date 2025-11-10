@@ -1,19 +1,17 @@
-
 server:
   http_listen_port: 3200
 
-# Configuração de quem pode enviar dados
 distributor:
   receivers:
-    otlp: 
+    otlp:
       protocols:
         grpc:
+          endpoint: 0.0.0.0:4317
         http:
+          endpoint: 0.0.0.0:4318
 
-# Configuração do armazenamento
 storage:
   trace:
     backend: local
     local:
       path: /tmp/tempo/traces
-
