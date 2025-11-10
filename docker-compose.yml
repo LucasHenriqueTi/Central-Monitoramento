@@ -58,8 +58,8 @@ services:
     volumes:
       - ./otel-collector/otel-config.yml:/etc/otel-config.yml
     ports:
-      - "14318:4318" # Recebe OTLP HTTP (mapeando para 14318 na máquina)
-      - "14317:4317" # Recebe OTLP gRPC (mapeando para 14317)
+      - "14318:4318" # Recebe OTLP HTTP
+      - "14317:4317" # Recebe OTLP gRPC
     depends_on:
       - loki
       - prometheus

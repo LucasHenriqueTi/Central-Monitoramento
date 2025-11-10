@@ -134,3 +134,21 @@ Chegar a esta configuração estável exigiu a observação de alguns pontos cru
           processors: [batch]
           exporters: [otlphttp/loki] # <-- Usando o novo exportador
         ```
+
+5.  **Configuração de `Resource` em Ambientes TypeScript Estritos (NOVO):**
+    * **Problema:** Ao usar `new Resource()` em um projeto TypeScript (especialmente com `verbatimModuleSyntax` ativado), o compilador pode gerar erros (`ts(1484)`), tratando `Resource` como um tipo e não como uma classe instanciável.
+    * **Solução (Correta):** A forma recomendada é usar as funções de fábrica `defaultResource` e `resourceFromAttributes` e combiná-las. Isso captura os atributos padrões do ambiente (ex: navegador) e os mescla com os seus atributos personalizados (ex: nome do serviço).
+        *Exemplo de importação:*
+        ```javascript
+        import { resourceFromAttributes, defaultResource } from '@opentelemetry/resources';
+        import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
+        ```
+        *Exemplo de uso:*
+        ```javascript
+        const myResource = defaultResource().merge(
+          resourceFromAttributes({
+            [ATTR_SERVICE_NAME]: 'meu-frontend',
+            // ... outros atributos
+          })
+        );
+        ```
